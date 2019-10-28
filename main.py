@@ -5,34 +5,6 @@ import glob
 import string
 import requests
 
-
-"""
-server-host/
-image/blahblah
-
-Overall Workflow:
-
-1. Download everything from imgur to a specified directory
-2. User manually upload the directory to a image hosting server
-3. User specify the host server url to CLI
-4. User change the image urls in the markdown file to point to the image hosting server
-
-Overall Download Procedures:
-
-1) Create a JSON file called `imginfo`
-2) Create a user-specified directory to dump all downloaded images
-3) Open all markdown files found from a specified directory
-4) For each image link encountered, create an strref entry in `imginfo`, then download the image
-
-Markdown URL Re-labelling:
-
-1) Parse `imginfo` to a map
-2) Open all markdown files
-3) For each image link encountered, use URL as key to find the name of the image downloaded
-4) Prepend the new image host server url to the image name, re-label the url in place
-5) Update the strref in `imginfo`
-"""
-
 MD_IMG = re.compile("!\\[(?P<img_name>.*)\\]\\((?P<img_url>.+)\\)") # tested at `regex101.com/r/Hd3foB/8`
 URL_VALID = re.compile( # source: stackoverflow.com/a/7160778/172132
         r'^(?:http|ftp)s?://' # http:// or https://
@@ -63,12 +35,15 @@ def rename_img(img_name):
     return NON_WORD.sub('', img_name.replace("-", "_"))
     
 def log(msg):
+    """level 1 logging"""
     print(msg)
 
 def log1(msg):
+    """level 2 logging"""
     print("  " + msg)
 
 def log2(msg):
+    """level 3 logging"""
     print("    " + msg)
 
 class ImageServerMigration(object):
@@ -165,11 +140,3 @@ class ImageServerMigration(object):
 
                     if (download_img(img_url, "{}/{}.png".format(self.img_dir, img_name)))
                         self.imginfo[img_url] = img_name
-    
-    
-
-
-# download_img("https://i.imgur.com/dx6TeOi.png", "test.jpg")
-
-
-
